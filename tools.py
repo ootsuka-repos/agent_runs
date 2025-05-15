@@ -1,14 +1,22 @@
-from smolagents import tool
-from huggingface_hub import list_models
+from smolagents import Tool
 
-@tool
-def model_download_tool(task: str) -> str:
+class HFModelDownloadsTool(Tool):
+    name = "model_download_counter"
+    description = """
+    指定したタスクカテゴリでHugging Face Hub上から最もダウンロード数が多いモデル（チェックポイント名）を返すツール。
     """
-    This is a tool that returns the most downloaded model of a given task on the Hugging Face Hub.
-    It returns the name of the checkpoint.
+    inputs = {
+        "task": {
+            "type": "string",
+            "description": "タスクカテゴリ（例: text-classification, depth-estimation など）",
+        }
+    }
+    output_type = "string"
 
-    Args:
-        task: The task for which to get the download count.
-    """
-    most_downloaded_model = next(iter(list_models(filter=task, sort="downloads", direction=-1)))
-    return most_downloaded_model.id
+    def forward(self, task: str):
+        from huggingface_hub import list_models
+
+        model = next(iter(list_models(filter=task, sort="downloads", direction=-1)))
+        return model.id
+
+model_downloads_tool = HFModelDownloadsTool()

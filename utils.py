@@ -4,13 +4,13 @@ from smolagents import CodeAgent, OpenAIServerModel
 
 def load_api_key():
     load_dotenv()
-    return os.environ.get("OPENROUTER_API_KEY")
+    return os.environ.get("OPENAI_API_KEY")
 
 def create_model(model_id):
     api_key = load_api_key()
     return OpenAIServerModel(
         model_id=model_id,
-        api_base="https://openrouter.ai/api/v1",
+        api_base="https://api.openai.com/v1",
         api_key=api_key,
     )
 
